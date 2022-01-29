@@ -7,9 +7,19 @@ use Illuminate\Http\Request;
 class DailyTaksController extends Controller
 {
     //Traemos la data almacenada en DB
-    public function index()
+    public function index(Request $request)
     {
-        $dailyTaks = $DailyTask::all();
+        $dailyTaks = $request->task;
+
+        //Verificación variables null 
+        $dailyTaks = ($dailyTaks == NULL) ? ($dailyTaks = '') : $dailyTaks;
+
+        if ($dailyTaks != NULL) {
+            $result = DailyTask::where([['task', 'like', '%' . $dailyTaks . '%']])->get();
+            return $result;
+        }
+
+        $dailyTaks = DailyTask::OrderBy('id', 'desc')->get();
         return response()->json($dailyTaks);
     }
 
@@ -20,8 +30,8 @@ class DailyTaksController extends Controller
         if (!$request->ajax()) return redirect('/'); //Si la petición no viene por ajax, redirecciona al basepath
     
             $dailyTaks = new DailyTask();
-            $dailyTaks->consecutivo = $request->task;
-            $dailyTaks->nit = $request->descriptcion;
+            $dailyTaks->task = $request->task;
+            $dailyTaks->description = $request->description;
 
             if (empty($request)) {
                 return response()->json([
@@ -35,8 +45,15 @@ class DailyTaksController extends Controller
             }
     }
 
+    
+    public function show(DailyTask $dailyTaks)
+    {
+        //
+        return response()->json($dailyTaks);
+    }
+
     //Actualizamos el registro solicitado desde el front
-    public function update(Request $request, Requerimientos $dailyTaks)
+    public function update(Request $request, DailyTask $dailyTaks)
     {
         if (!$request->ajax()) return redirect('/'); //Si la petición no viene por ajax, redirecciona al basepath
 
@@ -47,8 +64,12 @@ class DailyTaksController extends Controller
     }
 
     //Eliminamos usuarios seleccionados en la tabla de registro desde el front
-    public function destroy($id)
+    public function destroy(DailyTask $dailyTaks)
     {
         //
+        $dailyTaks->delete();
+        return response()->json([
+            'message' => 'Eliminado correctamente'
+        ]);
     }
 }

@@ -27,8 +27,13 @@
 </head>
 
 <body>
+    @if (!Auth::check())
         <div id="app">
         </div>
+    @else
+        <div id="login">
+        </div>
+    @endif
     <script src="{{ mix('js/app.js') }}" type="text/javascript"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
@@ -36,7 +41,7 @@
     </script>
     <br>
     <footer class="footer text-center">
-        2022 © DesarrollArt.
+        2022 © Argenedis Alvarez C.
     </footer>
 
 </body>

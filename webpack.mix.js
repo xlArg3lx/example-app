@@ -13,9 +13,10 @@ const mix = require('laravel-mix');
 
  mix.js('resources/js/app.js', 'public/js')
  .styles([
-     'resources/css/config.css',
+    'resources/css/config.css',
  ], 'public/css/plantilla.css')
  .postCss('resources/css/app.css', 'public/css', [
      //
- ])
+ ]).vue()
+ .copy('resources/img/lock.png', 'public/img')
  .disableSuccessNotifications();
